@@ -9,7 +9,7 @@ local set = vim.keymap.set
 -- key_map("o", "au", ':<c-u>lua require"treesitter-unit".select(true)<CR>', opts)
 
 -- -- Toggle vim-tree
-key_map("n", "<leader>t", ":NvimTreeToggle<CR>", opts)
+set("n", "<leader>t", ":NvimTreeToggle<CR>", opts)
 
 -- -- FILES
 -- -- Find file

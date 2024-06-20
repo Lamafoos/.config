@@ -46,6 +46,10 @@ return {
 
 			lsp_zero.on_attach(function(client, bufnr)
 				lsp_zero.default_keymaps({ buffer = bufnr })
+
+                if client.server_capabilities.inlayHintProvider then
+                    vim.lsp.inlay_hint.enable(bufnr, true)
+                end
 			end)
 
 			lsp_zero.set_server_config({

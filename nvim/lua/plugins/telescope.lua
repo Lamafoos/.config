@@ -18,14 +18,14 @@ return {
 			telescope.setup({
 				defaults = {
 					--     initial_mode = "insert",
-					--     file_ignore_patterns = { ".git/", "node_modules/" },
-					--     sorting_strategy = "ascending",
+					file_ignore_patterns = { ".git/", "node_modules/" },
+					--sorting_strategy = "ascending",
 					color_devicons = true,
-					--     -- path_display = "truncate",
-					-- border = {},
-					--     preview = {
-					--       timeout = 500,
-					--     },
+					path_display = "truncate",
+					border = {},
+					    preview = {
+					        timeout = 500,
+					    },
                     path_display = {"smart"},
 					file_previewer = require("telescope.previewers").vim_buffer_cat.new,
 				},
