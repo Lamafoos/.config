@@ -14,7 +14,7 @@ g.mapleader = " "
 opt.mouse = "a" -- enable mouse support
 opt.swapfile = false -- don't use swapfile
 opt.backup = false -- no backup
--- opt.undodir = os.getenv("Home") .. "/.vim/undodir"
+opt.undodir = "~/.vim/undodir"
 opt.undofile = true
 opt.spell = true -- spellchecking
 opt.spelllang = { "en_us" } -- languange to spellcheck
@@ -24,15 +24,8 @@ opt.updatetime = 50
 -----------------------------------------------------------
 opt.number = true -- show line number
 opt.relativenumber = true -- show relative number
-
--- opt.foldmethod = 'marker' -- enable folding (default 'foldmarker')
--- opt.colorcolumn = '80'        -- line lenght marker at 80 columns
--- opt.splitright = true -- vertical split to the right
--- opt.splitbelow = true -- horizontal split to the bottom
--- opt.ignorecase = true -- ignore case letters when search
 opt.hlsearch = false -- show partial matches
 opt.incsearch = true -- show partial matches
--- opt.smartcase = true -- ignore lowercase for the whole pattern
 opt.linebreak = true -- dont cut word on word wrap
 opt.termguicolors = true
 opt.wrap = false
@@ -63,5 +56,4 @@ opt.hidden = true -- enable background buffers
 opt.history = 300 -- remember n lines in history
 opt.lazyredraw = true -- faster scrolling
 opt.synmaxcol = 240 -- max column for syntax highlight
-
 
