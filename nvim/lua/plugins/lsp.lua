@@ -51,6 +51,7 @@ return {
 
                 if client.server_capabilities.inlayHintProvider then
                     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+                    vim.keymap.set("n", "<leader>tih","<cmd>lua lsp.inlay_hint.enable(0, not lsp.inlay_hint.is_enabled()) end)<CR>", { silent = true })
                 end
 			end)
 
@@ -81,7 +82,7 @@ return {
 					on_init = function(client, bufnr)
 						vim.notify(client.name .. ": Language Server successfully started!", "info")
 					end,
-					settings = {
+					default_settings = {
 						["rust-analyzer"] = {
 							checkOnSave = {
 								command = "clippy",
