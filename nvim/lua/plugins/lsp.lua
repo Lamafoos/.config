@@ -42,17 +42,22 @@ return {
 		branch = "v3.x",
 		config = function()
 			local lsp_zero = require("lsp-zero")
-            -- local navbuddy = require("nvim-navbuddy")
+			-- local navbuddy = require("nvim-navbuddy")
 			lsp_zero.extend_lspconfig()
 
 			lsp_zero.on_attach(function(client, bufnr)
 				lsp_zero.default_keymaps({ buffer = bufnr })
-              --  navbuddy.attach(client, bufnr)
+				--  navbuddy.attach(client, bufnr)
 
-                if client.server_capabilities.inlayHintProvider then
-                    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-                    vim.keymap.set("n", "<leader>tih","<cmd>lua lsp.inlay_hint.enable(0, not lsp.inlay_hint.is_enabled()) end)<CR>", { silent = true })
-                end
+				if client.server_capabilities.inlayHintProvider then
+					vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+					vim.keymap.set(
+						"n",
+						"<leader>tih",
+						"<cmd>lua lsp.inlay_hint.enable(0, not lsp.inlay_hint.is_enabled()) end)<CR>",
+						{ silent = true }
+					)
+				end
 			end)
 
 			lsp_zero.set_server_config({
