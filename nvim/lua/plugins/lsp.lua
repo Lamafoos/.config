@@ -21,7 +21,7 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = {
 					"lua_ls",
-					"tsserver",
+					"ts_ls",
 					"cssls",
 					"html",
 					"eslint",
@@ -42,12 +42,12 @@ return {
 		branch = "v3.x",
 		config = function()
 			local lsp_zero = require("lsp-zero")
-			-- local navbuddy = require("nvim-navbuddy")
+			local navbuddy = require("nvim-navbuddy")
 			lsp_zero.extend_lspconfig()
 
 			lsp_zero.on_attach(function(client, bufnr)
 				lsp_zero.default_keymaps({ buffer = bufnr })
-				--  navbuddy.attach(client, bufnr)
+				navbuddy.attach(client, bufnr)
 
 				if client.server_capabilities.inlayHintProvider then
 					vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
@@ -76,7 +76,7 @@ return {
 	},
 	{
 		"mrcjkb/rustaceanvim",
-		version = "^4",
+		version = "^5",
 		ft = { "rust" },
 		config = function()
 			local lsp_zero = require("lsp-zero")

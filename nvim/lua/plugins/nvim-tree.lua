@@ -36,7 +36,7 @@ return {
 				ignore_list = {},
 			},
 			diagnostics = {
-				enable = false,
+				enable = true,
 				show_on_dirs = false,
 				icons = {
 					hint = "",

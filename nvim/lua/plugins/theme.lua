@@ -28,9 +28,11 @@ return {
 		end,
 	},
 	{
-		"projekt0n/github-nvim-theme",
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
 		config = function()
-		    vim.cmd.colorscheme("github_dark_dimmed")
+			vim.cmd("colorscheme catppuccin-mocha")
 		end,
 	},
 }
