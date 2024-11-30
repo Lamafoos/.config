@@ -1,22 +1,25 @@
 return {
-	{ "hrsh7th/cmp-nvim-lsp" },
-	{ "hrsh7th/nvim-cmp" },
-	{ "hrsh7th/cmp-buffer" },
-	{ "hrsh7th/cmp-path" },
-
-	-- Snippets
 	{ "onsails/lspkind-nvim" },
 	{
 		"L3MON4D3/LuaSnip",
+		version = "v2.*",
+		build = "make install_jsregexp",
 		dependencies = { "rafamadriz/friendly-snippets" },
+		config = function()
+			require("luasnip.loaders.from_vscode").lazy_load()
+		end,
 	},
-	{ "rafamadriz/friendly-snippets" },
+	--{ "rafamadriz/friendly-snippets" },
 
 	-- Autocompletion
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
 			{ "L3MON4D3/LuaSnip" },
+			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "hrsh7th/nvim-cmp" },
+			{ "hrsh7th/cmp-buffer" },
+			{ "hrsh7th/cmp-path" },
 		},
 		config = function()
 			local luasnip = require("luasnip")
@@ -61,24 +64,14 @@ return {
 				},
 
 				mapping = cmp.mapping.preset.insert({
-					-- `Enter` key to confirm completion
-					["<CR>"] = cmp.mapping.confirm({ select = false }),
-
-					-- Ctrl+Space to trigger completion menu
-					["<C-Space>"] = cmp.mapping.complete(),
-
-					-- Prev/next
-					["<C-p>"] = cmp.mapping.select_prev_item(),
-					["<C-n>"] = cmp.mapping.select_next_item(),
-
-					-- Navigate between snippet placeholder
-					["<C-f>"] = cmp_action.luasnip_jump_forward(),
-					["<C-b>"] = cmp_action.luasnip_jump_backward(),
-
-					-- Scroll up and down in the completion documentation
-					["<C-u>"] = cmp.mapping.scroll_docs(-4),
-					["<C-d>"] = cmp.mapping.scroll_docs(4),
-
+					["<CR>"] = cmp.mapping.confirm({ select = false }), -- `Enter` key to confirm completion
+					["<C-Space>"] = cmp.mapping.complete(), -- Ctrl+Space to trigger completion menu
+					["<C-p>"] = cmp.mapping.select_prev_item(), -- Prev
+					["<C-n>"] = cmp.mapping.select_next_item(), -- Next
+					["<C-f>"] = cmp_action.luasnip_jump_forward(), -- Navigate between snippet placeholder
+					["<C-b>"] = cmp_action.luasnip_jump_backward(), -- Navigate between snippet placeholder
+					["<C-u>"] = cmp.mapping.scroll_docs(-4), -- Scroll up and down in the completion documentation
+					["<C-d>"] = cmp.mapping.scroll_docs(4), -- Scroll up and down in the completion documentation
 					-- Tab mappings
 					["<Tab>"] = function(fallback)
 						if cmp.visible() then
@@ -113,10 +106,10 @@ return {
 					},
 				},
 				sources = {
-					-- { name = "cmp-nvim-lua" },
-					{ name = "nvim_lsp" },
-					{ name = "nvim_lsp_signature_help" },
+					{ name = "cmp-nvim-lua" },
 					{ name = "luasnip" },
+					{ name = "nvim_lsp" },
+					--{ name = "nvim_lsp_signature_help" },
 					{ name = "buffer" },
 					{ name = "path" },
 				},
@@ -125,9 +118,6 @@ return {
 						mode = "symbol_text", -- show only symbol annotations
 						maxwidth = 50,
 						ellipsis_char = "...",
-
-						-- The function below will be called before any actual modifications from lspkind
-						-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
 						before = function(entry, vim_item)
 							vim_item.kind = lsp_symbols[vim_item.kind]
 

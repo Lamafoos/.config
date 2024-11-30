@@ -36,18 +36,18 @@ return {
 			})
 		end,
 	},
-	{ "neovim/nvim-lspconfig" },
+	{
+		"neovim/nvim-lspconfig",
+	},
 	{
 		"VonHeikemen/lsp-zero.nvim",
 		branch = "v3.x",
 		config = function()
 			local lsp_zero = require("lsp-zero")
-			local navbuddy = require("nvim-navbuddy")
 			lsp_zero.extend_lspconfig()
 
 			lsp_zero.on_attach(function(client, bufnr)
 				lsp_zero.default_keymaps({ buffer = bufnr })
-				navbuddy.attach(client, bufnr)
 
 				if client.server_capabilities.inlayHintProvider then
 					vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
@@ -66,11 +66,15 @@ return {
 				end,
 			})
 
-			lsp_zero.set_sign_icons({
-				error = "",
-				warning = "",
-				hint = "",
-				information = "",
+			vim.diagnostic.config({
+				signs = {
+					text = {
+						[vim.diagnostic.severity.ERROR] = "✘",
+						[vim.diagnostic.severity.WARN] = "▲",
+						[vim.diagnostic.severity.HINT] = "⚑",
+						[vim.diagnostic.severity.INFO] = "»",
+					},
+				},
 			})
 		end,
 	},

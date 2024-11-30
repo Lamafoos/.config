@@ -56,4 +56,3 @@ opt.hidden = true -- enable background buffers
 opt.history = 300 -- remember n lines in history
 opt.lazyredraw = true -- faster scrolling
 opt.synmaxcol = 240 -- max column for syntax highlight
-
