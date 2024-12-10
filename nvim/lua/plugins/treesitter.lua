@@ -1,32 +1,47 @@
 return {
-	"nvim-treesitter/nvim-treesitter",
-	build = ":TSUpdate",
-	keys = {
-		{ "<leader>t", ":NvimTreeToggle<CR>", desc = "NvimTreeToggle" },
+	{
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
+		keys = {
+			{ "<leader>t", ":NvimTreeToggle<CR>", desc = "NvimTreeToggle" },
+		},
+		config = function()
+			require("nvim-treesitter.configs").setup({
+
+				highlight = {
+					enable = true,
+				},
+				textobjects = {
+					move = {
+						enable = true,
+						goto_next_start = {
+							["]f"] = "@function.outer",
+							["]c"] = "@class.outer",
+							["]a"] = "@parameter.inner",
+						},
+						goto_next_end = {
+							["]F"] = "@function.outer",
+							["]C"] = "@class.outer",
+							["]A"] = "@parameter.inner",
+						},
+						goto_previous_start = {
+							["[f"] = "@function.outer",
+							["[c"] = "@class.outer",
+							["[a"] = "@parameter.inner",
+						},
+						goto_previous_end = {
+							["[F"] = "@function.outer",
+							["[C"] = "@class.outer",
+							["[A"] = "@parameter.inner",
+						},
+					},
+				},
+			})
+		end,
 	},
-	config = function()
-		require("nvim-treesitter.configs").setup({
-			ensure_installed = {
-				"c",
-				"lua",
-				"vim",
-				"vimdoc",
-				"query",
-				"html",
-				"javascript",
-				"typescript",
-				"rust",
-				"twig",
-				"tsx",
-			},
-			highlight = {
-				enable = true,
-			},
-			rainbow = {
-				enable = true,
-				extended_mode = true,
-				max_file_lines = nil,
-			},
-		})
-	end,
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		after = "nvim-treesitter",
+		requires = "nvim-treesitter/nvim-treesitter",
+	},
 }

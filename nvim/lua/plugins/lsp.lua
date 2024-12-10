@@ -60,11 +60,11 @@ return {
 				end
 			end)
 
-			lsp_zero.set_server_config({
-				on_init = function(client)
-					vim.notify(client.name .. ": Language Server successfully started!", "info")
-				end,
-			})
+			-- lsp_zero.set_server_config({
+			-- 	on_init = function(client)
+			-- 		vim.notify(client.name .. ": Language Server successfully started!", "info")
+			-- 	end,
+			-- })
 
 			vim.diagnostic.config({
 				signs = {

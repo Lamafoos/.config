@@ -1,31 +1,33 @@
 return {
-	{ "onsails/lspkind-nvim" },
+	-- { "onsails/lspkind-nvim" },
+	-- {
+	-- 	"L3MON4D3/LuaSnip",
+	-- 	version = "v2.*",
+	-- 	build = "make install_jsregexp",
+	-- 	dependencies = { "rafamadriz/friendly-snippets" },
+	-- 	config = function()
+	-- 		require("luasnip.loaders.from_vscode").lazy_load()
+	-- 	end,
+	-- },
 	{
-		"L3MON4D3/LuaSnip",
-		version = "v2.*",
-		build = "make install_jsregexp",
+		"garymjr/nvim-snippets",
+		opts = {
+			friendly_snippets = true,
+		},
 		dependencies = { "rafamadriz/friendly-snippets" },
-		config = function()
-			require("luasnip.loaders.from_vscode").lazy_load()
-		end,
 	},
-	--{ "rafamadriz/friendly-snippets" },
-
-	-- Autocompletion
 	{
 		"hrsh7th/nvim-cmp",
+		event = "InsertEnter",
 		dependencies = {
-			{ "L3MON4D3/LuaSnip" },
-			{ "hrsh7th/cmp-nvim-lsp" },
-			{ "hrsh7th/nvim-cmp" },
-			{ "hrsh7th/cmp-buffer" },
-			{ "hrsh7th/cmp-path" },
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
 		},
 		config = function()
-			local luasnip = require("luasnip")
-			local cmp_action = require("lsp-zero").cmp_action()
-			local lspkind = require("lspkind")
 			local cmp = require("cmp")
+			-- local cmp_action = require("lsp-zero").cmp_action()
+			-- local lspkind = require("lspkind")
 
 			local lsp_symbols = {
 				Text = "   (Text) ",
@@ -56,28 +58,25 @@ return {
 			}
 
 			cmp.setup({
-				-- REQUIRED: Load snippet enginge
+				-- REQUIRED: Load snippet engine
 				snippet = {
 					expand = function(args)
-						luasnip.lsp_expand(args.body)
+						vim.snippet.expand(args.body)
 					end,
 				},
 
 				mapping = cmp.mapping.preset.insert({
-					["<CR>"] = cmp.mapping.confirm({ select = false }), -- `Enter` key to confirm completion
+					["<CR>"] = cmp.mapping.confirm({ select = true }), -- `Enter` key to confirm completion
 					["<C-Space>"] = cmp.mapping.complete(), -- Ctrl+Space to trigger completion menu
 					["<C-p>"] = cmp.mapping.select_prev_item(), -- Prev
 					["<C-n>"] = cmp.mapping.select_next_item(), -- Next
-					["<C-f>"] = cmp_action.luasnip_jump_forward(), -- Navigate between snippet placeholder
-					["<C-b>"] = cmp_action.luasnip_jump_backward(), -- Navigate between snippet placeholder
-					["<C-u>"] = cmp.mapping.scroll_docs(-4), -- Scroll up and down in the completion documentation
-					["<C-d>"] = cmp.mapping.scroll_docs(4), -- Scroll up and down in the completion documentation
+					["<C-b>"] = cmp.mapping.scroll_docs(-4), -- Scroll up and down in the completion documentation
+					["<C-f>"] = cmp.mapping.scroll_docs(4), -- Scroll up and down in the completion documentation
 					-- Tab mappings
 					["<Tab>"] = function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
-						elseif luasnip.expand_or_jumpable() then
-							luasnip.expand_or_jump()
+                            -- cmp.map({ "snippet_forward", "ai_accept" }, fallback)()
 						else
 							fallback()
 						end
@@ -85,8 +84,7 @@ return {
 					["<S-Tab>"] = function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
-						elseif luasnip.jumpable(-1) then
-							luasnip.jump(-1)
+                            -- cmp.map({ "snippet_backward"}, fallback)()
 						else
 							fallback()
 						end
@@ -94,46 +92,49 @@ return {
 				}),
 				-- Completion settings
 				completion = {
-					completeopt = "menu, menuone",
-					keyword_length = 1,
-				},
-				experimental = {
-					ghost_text = true,
+					completeopt = "menu,menuone,noinsert",
+					-- keyword_length = 1,
 				},
 				window = {
-					documentation = {
-						border = { "", "", "", "", "", "", "", "" },
-					},
+					completion = cmp.config.window.bordered(),
+					documentation = cmp.config.window.bordered(),
 				},
 				sources = {
-					{ name = "cmp-nvim-lua" },
-					{ name = "luasnip" },
 					{ name = "nvim_lsp" },
-					--{ name = "nvim_lsp_signature_help" },
+					{ name = "snippets" },
+					-- { name = "luasnip" },
+					-- { name = "cmp-nvim-lua" },
+					-- { name = "nvim_lsp_signature_help" },
 					{ name = "buffer" },
 					{ name = "path" },
 				},
-				formatting = {
-					format = lspkind.cmp_format({
-						mode = "symbol_text", -- show only symbol annotations
-						maxwidth = 50,
-						ellipsis_char = "...",
-						before = function(entry, vim_item)
-							vim_item.kind = lsp_symbols[vim_item.kind]
-
-							vim_item.menu = ({
-								nvim_lsp = "[LSP]",
-								luasnip = "[LuaSnip]",
-								nvim_lua = "[Lua]",
-								path = "[Path]",
-								buffer = "[Buffer]",
-								emoji = "[Emoji]",
-							})[entry.source.name]
-
-							return vim_item
-						end,
-					}),
+				experimental = {
+					-- only show ghost text when we show ai completions
+					ghost_text = vim.g.ai_cmp and {
+						hl_group = "CmpGhostText",
+					} or false,
 				},
+				-- formatting = {
+				-- 	format = lspkind.cmp_format({
+				-- 		mode = "symbol_text", -- show only symbol annotations
+				-- 		maxwidth = 50,
+				-- 		ellipsis_char = "...",
+				-- 		before = function(entry, vim_item)
+				-- 			vim_item.kind = lsp_symbols[vim_item.kind]
+				--
+				-- 			vim_item.menu = ({
+				-- 				nvim_lsp = "[LSP]",
+				-- 				luasnip = "[LuaSnip]",
+				-- 				nvim_lua = "[Lua]",
+				-- 				path = "[Path]",
+				-- 				buffer = "[Buffer]",
+				-- 				emoji = "[Emoji]",
+				-- 			})[entry.source.name]
+				--
+				-- 			return vim_item
+				-- 		end,
+				-- 	}),
+				-- },
 			})
 		end,
 	},
