@@ -58,11 +58,32 @@ local function custom_lualine_catpuccin()
 end
 
 return {
-	{ "kyazdani42/nvim-web-devicons" },
+	{
+		"echasnovski/mini.icons",
+		lazy = true,
+		opts = {
+			file = {
+				[".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
+				["devcontainer.json"] = { glyph = "", hl = "MiniIconsAzure" },
+			},
+			filetype = {
+				dotenv = { glyph = "", hl = "MiniIconsYellow" },
+			},
+		},
+		init = function()
+			package.preload["nvim-web-devicons"] = function()
+				require("mini.icons").mock_nvim_web_devicons()
+				return package.loaded["nvim-web-devicons"]
+			end
+		end,
+	},
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
 		priority = 1000,
+		opts = {
+			integrations = { harpoon = true, blink_cmp = true, noice = true },
+		},
 		config = function()
 			vim.cmd("colorscheme catppuccin-mocha")
 		end,
@@ -101,7 +122,6 @@ return {
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
 		},
-
 		config = function()
 			local alpha = require("alpha")
 			local dashboard = require("alpha.themes.startify")
@@ -136,29 +156,29 @@ return {
 			"rcarriga/nvim-notify",
 		},
 		config = function()
-			require("noice").setup({
+			require("noice").setup(require("noice").setup({
 				lsp = {
 					-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 					override = {
 						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 						["vim.lsp.util.stylize_markdown"] = true,
-						["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+						["cmp.entry.get_documentation"] = true,
 					},
 				},
 				-- you can enable a preset for easier configuration
 				presets = {
 					bottom_search = true, -- use a classic bottom cmdline for search
-					command_palette = true, -- position the cmdline and popupmenu together
+					command_palette = false, -- position the cmdline and popupmenu together
 					long_message_to_split = true, -- long messages will be sent to a split
 					inc_rename = false, -- enables an input dialog for inc-rename.nvim
 					lsp_doc_border = true, -- add a border to hover docs and signature help
 				},
-			})
+			}))
 		end,
 	},
 	{
 		"rachartier/tiny-inline-diagnostic.nvim",
-		event = "VeryLazy", -- Or `LspAttach`
+		event = "LspAttach",
 		priority = 1000, -- needs to be loaded in first
 		config = function()
 			require("tiny-inline-diagnostic").setup({

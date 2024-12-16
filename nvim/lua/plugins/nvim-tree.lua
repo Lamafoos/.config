@@ -14,9 +14,9 @@ return {
 		g.nvim_tree_highlight_current_file = 1
 
 		nvim_tree.setup({
-			respect_buf_cwd = true,
+			-- respect_buf_cwd = true,
 
-			update_cwd = true,
+			-- update_cwd = true,
 			actions = {
 				open_file = {
 					quit_on_open = true,
@@ -44,6 +44,9 @@ return {
 					warning = "",
 					error = "",
 				},
+			},
+			filters = {
+				dotfiles = false,
 			},
 			renderer = {
 				special_files = { "README.md", "readme.md" },

@@ -1,8 +1,9 @@
 -----------------------------------------------------------
 -- Take a gander at the setup.
 -----------------------------------------------------------
-require("settings")
-require("keymappings")
+-- require("settings")
+-- require("keymappings")
+require("config")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local uv = vim.uv or vim.loop
