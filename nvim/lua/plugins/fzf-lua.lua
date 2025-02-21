@@ -12,6 +12,7 @@ return {
 
 		vim.keymap.set("n", "<leader>pf", "<cmd>FzfLua files<CR>", { silent = true })
 		vim.keymap.set("n", "<leader>ps", "<cmd>FzfLua live_grep<CR>", { silent = true })
+		vim.keymap.set("n", "<leader>psg", "<cmd>FzfLua live_grep_glob<CR>", { silent = true })
 		vim.keymap.set("n", "<leader>pb", "<cmd>FzfLua buffers<CR>", { silent = true })
 	end,
 }

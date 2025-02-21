@@ -1,17 +1,15 @@
 return {
 	{
 		"williamboman/mason.nvim",
-		config = function()
-			require("mason").setup({
-				ui = {
-					icons = {
-						package_installed = "✓",
-						package_pending = "➜",
-						package_uninstalled = "✗",
-					},
+		opts = {
+			ui = {
+				icons = {
+					package_installed = "✓",
+					package_pending = "➜",
+					package_uninstalled = "✗",
 				},
-			})
-		end,
+			},
+		},
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
@@ -24,20 +22,26 @@ return {
 					"ts_ls",
 					"cssls",
 					"html",
-					"eslint",
 					"rust_analyzer",
 					"volar",
-					"eslint",
 				},
 				handlers = {
 					lsp_zero.default_setup,
-					rust_analyzer = lsp_zero.noop,
 				},
 			})
 		end,
 	},
 	{
 		"neovim/nvim-lspconfig",
+		dependencies = { "saghen/blink.cmp" },
+		config = function()
+			local lspconfig_defaults = require("lspconfig").util.default_config
+			lspconfig_defaults.capabilities = vim.tbl_deep_extend(
+				"force",
+				lspconfig_defaults.capabilities,
+				require("blink.cmp").get_lsp_capabilities()
+			)
+		end,
 	},
 	{
 		"VonHeikemen/lsp-zero.nvim",
@@ -45,28 +49,30 @@ return {
 		config = function()
 			local lsp_zero = require("lsp-zero")
 			lsp_zero.extend_lspconfig()
-
 			lsp_zero.on_attach(function(client, bufnr)
-				lsp_zero.default_keymaps({ buffer = bufnr })
-
 				if client.server_capabilities.inlayHintProvider then
-					vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+					vim.lsp.inlay_hint.enable()
 					vim.keymap.set(
 						"n",
 						"<leader>tih",
-						"<cmd>lua lsp.inlay_hint.enable(0, not lsp.inlay_hint.is_enabled()) end)<CR>",
+						"<cmd>:lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<cr>",
 						{ silent = true }
 					)
 				end
+				if client.server_capabilities.code_lens then
+					vim.lsp.code_lens.enable(true, { bufnr = bufnr })
+				end
 			end)
 
-			-- lsp_zero.set_server_config({
-			-- 	on_init = function(client)
-			-- 		vim.notify(client.name .. ": Language Server successfully started!", "info")
-			-- 	end,
-			-- })
-
 			vim.diagnostic.config({
+				underline = true,
+				update_in_insert = false,
+				virtual_text = {
+					spacing = 4,
+					source = "if_many",
+					prefix = "●",
+				},
+				severity_sort = true,
 				signs = {
 					text = {
 						[vim.diagnostic.severity.ERROR] = "✘",
@@ -76,30 +82,6 @@ return {
 					},
 				},
 			})
-		end,
-	},
-	{
-		"mrcjkb/rustaceanvim",
-		version = "^5",
-		ft = { "rust" },
-		config = function()
-			local lsp_zero = require("lsp-zero")
-
-			vim.g.rustaceanvim = {
-				server = {
-					capabilities = lsp_zero.get_capabilities(),
-					on_init = function(client, bufnr)
-						vim.notify(client.name .. ": Language Server successfully started!", "info")
-					end,
-					default_settings = {
-						["rust-analyzer"] = {
-							checkOnSave = {
-								command = "clippy",
-							},
-						},
-					},
-				},
-			}
 		end,
 	},
 }
